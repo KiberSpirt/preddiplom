@@ -1,0 +1,17 @@
+{% extends 'tournament/base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<h1>Информация профиля</h1>
+    <p><strong>Юзернейм:</strong> {{ profile.username }}</p>
+    <p><strong>Почта:</strong> {{ profile.email }}</p>
+    <p><strong>Роль:</strong> {{ profile.role }}</p>
+    <p><strong>Страна:</strong> {{ profile.country }}</p>
+    <p><strong>Город:</strong> {{ profile.city }}</p>
+    <p><strong>Факультет:</strong> {{ profile.faculty }}</p>
+    <p><strong>Учебная группа:</strong> {{ profile.study_group }}</p>
+    <p><strong>Специализация:</strong> {{ profile.speciality }}</p>
+
+    <a href="{% url 'edit_profile' %}">Редактировать</a>
+{% endblock %}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+            border-radius: 5px;
+        }
+
+        .container-team {
+            max-width: 1900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f4f4f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #555454;
+            color: #fff;
+        }
+
+        td {
+            background-color: #b8b8b8;
+            color: #f4f4f9;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #2c2c2c;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    {% if matches %}
+<h2 style="text-align: center">Расписание матчей</h2>
+<div class="container-team">
+    <table>
+        <thead>
+            <tr>
+                <th>Номер раунда</th>
+                <th>Соперник 1</th>
+                <th>Соперник 2</th>
+                <th>Дата матча</th>
+                <th>Результат матча</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+            <tr>
+                <td>Раунд {{ match.round_number }}</td>
+                <td>{{ match.team1.name }}</td>
+                <td>{{ match.team2.name }}</td>
+                <td>
+                    {% if request.user.role == 'admin' %}
+                    <form action="{% url 'update_match' match.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="datetime-local" name="match_date" value="{{ match.match_date|date:'Y-m-d\TH:i' }}">
+                </td>
+                <td>
+                        <select name="result">
+                            <option value="">Выберите результат</option>
+                            <option value="{{ match.team1.id }}" {% if match.result == match.team1.id %}selected{% endif %}>{{ match.team1.name }} победил</option>
+                            <option value="{{ match.team2.id }}" {% if match.result == match.team2.id %}selected{% endif %}>{{ match.team2.name }} победил</option>
+                            <option value="draw" {% if match.result == 'draw' %}selected{% endif %}>Ничья</option>
+                        </select>
+                        <button type="submit">Обновить</button>
+                    </form>
+                    {% else %}
+                    {{ match.match_date|date:"d-m-Y H:i" }}
+                </td>
+                <td>
+                    {% if match.result == match.team1.id %}
+                        {{ match.team1.name }} победил
+                    {% elif match.result == match.team2.id %}
+                        {{ match.team2.name }} победил
+                    {% elif match.result == "draw" %}
+                        Ничья
+                    {% else %}
+                        Не определен
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>Нет запланированных матчей.</p>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+            border-radius: 5px;
+        }
+
+        .container-team {
+            max-width: 1900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #f4f4f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #555454;
+            color: #fff;
+        }
+        td {
+            background-color: #b8b8b8;
+            color: #f4f4f9;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        tr:nth-child(even) td {
+            background-color: #2c2c2c;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-team">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название команды</th>
+                    <th>Присоединиться</th>
+                    <th>Информация о команде</th>
+                    {% if request.user.role == 'admin' %}
+                        <th>Удалить команду?</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in tournament.teams.all %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ team.name }}</td>
+    <td>
+    {% if not tournament.is_close_for_register %}
+        {% if user in team.members.all %}
+            <form action="{% url 'leave_team' team.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Отсоединиться</button>
+            </form>
+        {% else %}
+            <form action="{% url 'join_team' team.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Присоединиться</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <h2>Регистрация на турнир закончена</h2>
+        {% endif %}
+    </td>
+    <td>
+        <a href="{% url 'team_detail' team.id %}">Детали</a>
+    </td>
+    {% if request.user.role == 'admin' %}
+        <td>
+        <a href="{% url 'remove_team_from_tournament' team.id %}">Удалить команду</a>
+        </td>
+    {% endif %}
+</tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

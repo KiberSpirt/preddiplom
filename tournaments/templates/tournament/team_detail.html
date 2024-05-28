@@ -1,0 +1,33 @@
+{% extends 'tournament/base.html' %}
+
+{% block title %}Детали о турнире{% endblock %}
+
+{% block content %}
+<h1>команда: {{ team.name }}</h1>
+    <p><strong>Капитан:</strong> {{ team.captain }}</p>
+    <p><strong>Почта капитана:</strong> {{ team.email }}</p>
+    <p><strong>{{ members_count }}/{{ team_size }}</strong> участников</p>
+
+<section class="container-team">
+     <h2>Участники</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Юзернейм</th>
+                <th>Почта</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in team.members.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ member.username }}</td>
+                    <td>{{ member.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </section>
+
+{% endblock %}

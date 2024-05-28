@@ -1,0 +1,16 @@
+{% extends 'tournament/base.html' %}
+
+{% block title %}Создать команду{% endblock %}
+
+{% block content %}
+<h1>Создание новой команды</h1>
+    {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Создать команду</button>
+        </form>
+    {% endif %}
+{% endblock %}

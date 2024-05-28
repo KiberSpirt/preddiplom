@@ -1,0 +1,31 @@
+{% extends 'tournament/base.html' %}
+
+{% block title %}Детали о турнире{% endblock %}
+
+{% block content %}
+<h1>Детали турнира</h1>
+    <p><strong>Название турнира:</strong> {{ tournament.name }}</p>
+    <p><strong>Начало турнира:</strong> {{ tournament.start_date }}</p>
+    <p><strong>Конец турнира:</strong> {{ tournament.end_date }}</p>
+    <p><strong>Описание турнира:</strong> {{ tournament.description }}</p>
+    <p><strong>Максимальное кол-во команд:</strong> {{ tournament.team_quantity }}</p>
+    <p><strong>Максимальное кол-во человек в команде:</strong> {{ tournament.team_size }}</p>
+    <h2 style="text-align: center">Команды, участвующие в турнире:</h2>
+    {% with tournament as tournament %}
+        {% include 'tournament/team_list.html' %}
+    {% endwith %}
+
+    {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+    {% endif %}
+    {% if not tournament.is_close_for_register %}
+        <a href="{% url 'register_tournament' tournament.id %}">Создать новую команду</a>
+    {% else %}
+        <h2>Регистрация на турнир закрыта</h2>
+    {% endif %}
+    {% include 'tournament/schedule.html' %}
+    <h2 style="text-align: center">Турнирная сетка</h2>
+    {% with teams as teams %}
+        {% include 'tournament/tournament_table.html' %}
+    {% endwith %}
+{% endblock %}

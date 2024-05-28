@@ -1,0 +1,15 @@
+{% extends 'tournament/base.html' %}
+
+{% block title %}Создание турнира{% endblock %}
+
+{% block content %}
+<section class="registration-form">
+        <div class="container">
+    <h1>Создание турнира </h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Создать</button>
+    </form>
+</section>
+{% endblock %}
